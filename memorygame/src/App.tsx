@@ -1,34 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createContext, useEffect, useState } from "react"
+import Card from "./components/Card";
 
-function App() {
-  const [count, setCount] = useState(0)
+type FlippedCardsContextType = {
+  flippedCards: string[],
+  addCard: (c:string) => void
+}
+
+export const FlippedCardsContext = createContext<FlippedCardsContextType>({
+  flippedCards: [],
+  addCard: () => {}
+})
+
+const App = () => {
+  const [cards, setCards] = useState<string[]>([])
+  const [flippedCards, setFlippedCards] = useState<string[]>([])
+
+  useEffect(()=>{
+    const emojis: string[] = [
+      "😍","😎","👀","🎂",
+      "🐱‍🚀","🐱‍🐉","🎁","🐱‍👤"];
+
+    setCards([...emojis, ...emojis]
+    .sort((_,__)=>{ return Math.floor(Math.random()*3) -1 })
+    );
+  },[]) //csak egyszer fut le oldal inditasakor
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <FlippedCardsContext.Provider value={{
+      addCard: (c:string)=>{ setFlippedCards(prev => [...prev, c]) },
+      flippedCards: flippedCards
+    }}>
+    <div className="cardWrapper">
+      {cards.map((e)=> <Card symbol={e}/>) }
+    </div>
+    </FlippedCardsContext.Provider>
   )
 }
 
