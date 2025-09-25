@@ -27,7 +27,7 @@ body{
     cursor: pointer;
     font-size: 2rem;
     transform-style: preserve-3d;
-    transition: transform 0.8s;
+    transition: transform 0.5s;
 
     .front, .back{
       position: absolute;

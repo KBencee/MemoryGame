@@ -1,24 +1,26 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { FlippedCardsContext } from "../App"
 
-const Card = (props: {symbol: string}) => {
+const Card = (props: {
+  symbol: string,
+  idx: number
+}) => {
+  const {addCard, flippedCards, foundCards} = useContext(FlippedCardsContext)
+  
+  let flipped = flippedCards.includes(props.idx) || foundCards.includes(props.idx)
 
-    const [flipped, setFlipped] = useState(false)
-    const {addCard, flippedCards} = useContext(FlippedCardsContext)
-
-    const flipCard = () =>{
-        if(flippedCards.length < 2 && !flipped){
-            setFlipped(prev => !prev)
-            addCard(props.symbol)
-        }
+  const flipCard = () => {
+    if(flippedCards.length < 2 && !flipped){
+      addCard(props.idx)
     }
+  }
 
-    return (
-        <div className={flipped ? "card" : "card faceDown"} onClick={flipCard}>
-            <div className="front">{props.symbol}</div>
-            <div className="back"></div>
-        </div>
-    )
+  return (
+    <div className={flipped ? "card" : "card faceDown"} onClick={flipCard}>
+        <div className="front">{props.symbol}</div>
+        <div className="back"></div>
+    </div>
+  )
 }
 
 export default Card
